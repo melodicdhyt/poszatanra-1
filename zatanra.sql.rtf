@@ -1,0 +1,309 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 -- phpMyAdmin SQL Dump\
+-- version 4.8.2\
+-- https://www.phpmyadmin.net/\
+--\
+-- Host: localhost:3306\
+-- Generation Time: Sep 05, 2020 at 04:37 PM\
+-- Server version: 5.7.21\
+-- PHP Version: 7.2.7\
+\
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";\
+SET time_zone = "+00:00";\
+\
+--\
+-- Database: `zatanra`\
+--\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `barang`\
+--\
+\
+CREATE TABLE `barang` (\
+  `kodebarcode` varchar(50) NOT NULL,\
+  `namabarang` varchar(50) NOT NULL,\
+  `jenisbarang` varchar(100) NOT NULL,\
+  `ukuran` varchar(10) NOT NULL,\
+  `hargamodal` int(11) NOT NULL,\
+  `hargajual` int(11) NOT NULL,\
+  `stok` int(11) NOT NULL,\
+  `profit` int(100) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;\
+\
+--\
+-- Dumping data for table `barang`\
+--\
+\
+INSERT INTO `barang` (`kodebarcode`, `namabarang`, `jenisbarang`, `ukuran`, `hargamodal`, `hargajual`, `stok`, `profit`) VALUES\
+('ZTS-0001', 'KMC/Mickey Mouse/Merah Putih', 'Baju', '2', 17000, 28000, 12, 11000),\
+('ZTS-0002', 'KMC/Mickey Mouse/Merah Putih', 'Baju', '4', 21000, 32000, 2, 11000),\
+('ZTS-0003', 'KMC/Mickey Mouse/Merah Putih', 'Baju', '6', 17000, 28000, 2, 11000),\
+('ZTS-0004', 'KMC/ZOO/ORANGE', 'Baju', '8', 21000, 32000, 5, 11000),\
+('ZTS-0005', 'KMC/ZOO/ORANGE', 'Baju', '10', 21000, 32000, 2, 11000),\
+('ZTS-0006', 'KMC/ZOO/ORANGE', 'Baju', '12', 21000, 32000, 2, 11000);\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `d_pembelian`\
+--\
+\
+CREATE TABLE `d_pembelian` (\
+  `kodepembelian` varchar(50) NOT NULL,\
+  `subtotal` int(11) NOT NULL,\
+  `ongkir` int(11) NOT NULL,\
+  `total` int(11) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `d_penjualan`\
+--\
+\
+CREATE TABLE `d_penjualan` (\
+  `kodepenjualan` varchar(50) NOT NULL,\
+  `subtotal` int(11) NOT NULL,\
+  `ongkir` int(11) NOT NULL,\
+  `total` int(11) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `marketplace`\
+--\
+\
+CREATE TABLE `marketplace` (\
+  `idmarketplace` int(11) NOT NULL,\
+  `marketplace` varchar(30) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\
+\
+--\
+-- Dumping data for table `marketplace`\
+--\
+\
+INSERT INTO `marketplace` (`idmarketplace`, `marketplace`) VALUES\
+(1, 'TOKOPEDIA'),\
+(2, 'SHOPEE'),\
+(3, 'OFFLINE');\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `pembelian`\
+--\
+\
+CREATE TABLE `pembelian` (\
+  `id` int(11) NOT NULL,\
+  `kodepembelian` varchar(20) NOT NULL,\
+  `invoice` varchar(100) NOT NULL,\
+  `kodebarcode` varchar(50) NOT NULL,\
+  `jumlah` int(11) NOT NULL,\
+  `total` int(11) NOT NULL,\
+  `tglpembelian` date NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\
+\
+--\
+-- Triggers `pembelian`\
+--\
+DELIMITER $$\
+CREATE TRIGGER `batal_belibarang` AFTER DELETE ON `pembelian` FOR EACH ROW BEGIN\
+ UPDATE barang \
+SET stok = stok - old.jumlah\
+WHERE kodebarcode = old.kodebarcode;\
+END\
+$$\
+DELIMITER ;\
+DELIMITER $$\
+CREATE TRIGGER `belibarang` AFTER INSERT ON `pembelian` FOR EACH ROW BEGIN\
+UPDATE barang \
+SET stok = stok + NEW.jumlah\
+WHERE kodebarcode = NEW.kodebarcode;\
+END\
+$$\
+DELIMITER ;\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `penjualan`\
+--\
+\
+CREATE TABLE `penjualan` (\
+  `id` int(11) NOT NULL,\
+  `kodepenjualan` varchar(20) NOT NULL,\
+  `invoice` varchar(100) NOT NULL,\
+  `kodebarcode` varchar(50) NOT NULL,\
+  `jumlah` int(11) NOT NULL,\
+  `total` int(11) NOT NULL,\
+  `tglpenjualan` date NOT NULL,\
+  `idmarketplace` int(11) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;\
+\
+--\
+-- Triggers `penjualan`\
+--\
+DELIMITER $$\
+CREATE TRIGGER `batal_beli` AFTER DELETE ON `penjualan` FOR EACH ROW BEGIN\
+ UPDATE barang \
+SET stok = stok + old.jumlah\
+WHERE kodebarcode = old.kodebarcode;\
+END\
+$$\
+DELIMITER ;\
+DELIMITER $$\
+CREATE TRIGGER `jual` AFTER INSERT ON `penjualan` FOR EACH ROW BEGIN\
+UPDATE barang \
+SET stok = stok - NEW.jumlah\
+WHERE kodebarcode = NEW.kodebarcode;\
+END\
+$$\
+DELIMITER ;\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `stock`\
+--\
+\
+CREATE TABLE `stock` (\
+  `idStock` int(11) NOT NULL,\
+  `idBarang` int(11) NOT NULL,\
+  `jumlah` int(11) NOT NULL,\
+  `tanggal` datetime NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;\
+\
+--\
+-- Dumping data for table `stock`\
+--\
+\
+INSERT INTO `stock` (`idStock`, `idBarang`, `jumlah`, `tanggal`) VALUES\
+(1, 7, 10, '2019-01-09 23:08:36'),\
+(2, 8, 10, '2019-01-11 17:43:30'),\
+(3, 7, 100, '2019-01-20 10:15:34'),\
+(4, 9, 3, '2020-08-21 17:27:21');\
+\
+--\
+-- Triggers `stock`\
+--\
+DELIMITER $$\
+CREATE TRIGGER `delete_stock` AFTER DELETE ON `stock` FOR EACH ROW update barang\
+set stock = stock-old.jumlah\
+where idBarang = old.idBarang\
+$$\
+DELIMITER ;\
+DELIMITER $$\
+CREATE TRIGGER `update_stok` AFTER UPDATE ON `stock` FOR EACH ROW UPDATE barang\
+set stock = stock - old.jumlah+new.jumlah\
+where idBarang = new.idBarang\
+$$\
+DELIMITER ;\
+\
+-- --------------------------------------------------------\
+\
+--\
+-- Table structure for table `user`\
+--\
+\
+CREATE TABLE `user` (\
+  `id` int(11) NOT NULL,\
+  `username` varchar(25) NOT NULL,\
+  `nama` varchar(50) NOT NULL,\
+  `password` varchar(50) NOT NULL,\
+  `level` varchar(20) NOT NULL,\
+  `foto` varchar(255) NOT NULL\
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;\
+\
+--\
+-- Dumping data for table `user`\
+--\
+\
+INSERT INTO `user` (`id`, `username`, `nama`, `password`, `level`, `foto`) VALUES\
+(4, 'zatanra', 'Zatanra Admin', 'japricool', 'admin', 'ZATANRA.png'),\
+(5, 'jenong', 'Sandi', 'jenong', 'kasir', 'ZATANRA (1).png'),\
+(6, 'partner', 'faqih', 'partner', 'kasir', 'ZATANRA (2).png');\
+\
+--\
+-- Indexes for dumped tables\
+--\
+\
+--\
+-- Indexes for table `barang`\
+--\
+ALTER TABLE `barang`\
+  ADD PRIMARY KEY (`kodebarcode`);\
+\
+--\
+-- Indexes for table `marketplace`\
+--\
+ALTER TABLE `marketplace`\
+  ADD PRIMARY KEY (`idmarketplace`);\
+\
+--\
+-- Indexes for table `pembelian`\
+--\
+ALTER TABLE `pembelian`\
+  ADD PRIMARY KEY (`id`);\
+\
+--\
+-- Indexes for table `penjualan`\
+--\
+ALTER TABLE `penjualan`\
+  ADD PRIMARY KEY (`id`);\
+\
+--\
+-- Indexes for table `stock`\
+--\
+ALTER TABLE `stock`\
+  ADD PRIMARY KEY (`idStock`),\
+  ADD KEY `index` (`idBarang`);\
+\
+--\
+-- Indexes for table `user`\
+--\
+ALTER TABLE `user`\
+  ADD PRIMARY KEY (`id`);\
+\
+--\
+-- AUTO_INCREMENT for dumped tables\
+--\
+\
+--\
+-- AUTO_INCREMENT for table `marketplace`\
+--\
+ALTER TABLE `marketplace`\
+  MODIFY `idmarketplace` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;\
+\
+--\
+-- AUTO_INCREMENT for table `pembelian`\
+--\
+ALTER TABLE `pembelian`\
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;\
+\
+--\
+-- AUTO_INCREMENT for table `penjualan`\
+--\
+ALTER TABLE `penjualan`\
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;\
+\
+--\
+-- AUTO_INCREMENT for table `stock`\
+--\
+ALTER TABLE `stock`\
+  MODIFY `idStock` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;\
+\
+--\
+-- AUTO_INCREMENT for table `user`\
+--\
+ALTER TABLE `user`\
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;\
+}
