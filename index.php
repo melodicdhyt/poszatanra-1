@@ -3,7 +3,7 @@ error_reporting(error_reporting() & ~E_NOTICE);
  session_start();
  include "kodez.php";
  
-    $koneksi = new mysqli("localhost","root","","zatanra");
+    $koneksi = new mysqli("localhost","root","root","zatanra");
     if($_SESSION['admin'] || $_SESSION['kasir']){
 ?>
 <?php

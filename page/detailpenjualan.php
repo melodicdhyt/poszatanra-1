@@ -38,6 +38,7 @@ while ($data = $sql->fetch_assoc()) {
                         <thead>
                             <tr>
                                 <th>Nama Barang</th>
+                                <th>Ukuran</th>
                                 <th>Harga Jual</th>
                                 <th>Jumlah</th>
                                 <th>Total</th>
@@ -53,6 +54,7 @@ while ($data = $sql->fetch_assoc()) {
                             p.kodepenjualan as kodepenjualan,
                             p.invoice as invoice,
                             b.namabarang as namabarang,
+                            b.ukuran as ukuran,
                             b.hargajual as hargajual,
                             p.jumlah as jumlah,
                             p.total as total,
@@ -72,6 +74,7 @@ while ($data = $sql->fetch_assoc()) {
                             ?>
                                 <tr>
                                     <td><?php echo $data2['namabarang'] ?></td>
+                                    <td><?php echo $data2['ukuran']?></td>
                                     <td><?php echo $data2['hargajual'] ?></td>
                                     <td><?php echo $data2['jumlah'] ?></td>
                                     <td>Rp. <?php echo number_format($data2['total']) ?></td>

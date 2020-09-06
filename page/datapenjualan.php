@@ -77,18 +77,18 @@
                         $sql = $koneksi->query("select distinct (kodepenjualan),tglpenjualan
                                     from penjualan group by kodepenjualan, tglpenjualan");
                         while ($data = $sql->fetch_assoc()) {
-
+                            
 
                         ?>
 
                             <tr>
                                 <td><?php echo $no++ ?></td>
                                 <td><?php echo $data['tglpenjualan'] ?></td>
-                                <td><a href="?page=datapenjualan&aksi=detail&kodez=<?php echo $data['kodepenjualan'] ?>&kodebarcode=<?php echo $data['kodebarcode']?>" ><?php echo $data['kodepenjualan'] ?></a></td>
+                                <td><a href="?page=datapenjualan&aksi=detail&kodez=<?php echo $data['kodepenjualan'] ?>" ><?php echo $data['kodepenjualan'] ?></a></td>
 
                                 <td>
                                 
-                                    <?php if ($_SESSION['admin']) { ?> <a onclick="return confirm('Konfirmasi hapus Data Penjualan')" href="?page=datapenjualan&aksi=hapus&kodez=<?php echo $data['kodepenjualan'] ?>" class="btn btn-danger"><i class="material-icons" title="hapus">delete</i></a><?php } ?>
+                                    <?php if ($_SESSION['admin']) { ?> <a onclick="return confirm('Konfirmasi hapus Data Penjualan')" href="?page=datapenjualan&aksi=hapus&kodez=<?php echo $data['kodepenjualan']?>&kodebarcode=<?php echo $data['kodebarcode'] ?>&jumlah=<?php echo $data['jumlah'] ?>" class="btn btn-danger"><i class="material-icons" title="hapus">delete</i></a><?php } ?>
                                 </td>
                             </tr>
                         <?php } ?>

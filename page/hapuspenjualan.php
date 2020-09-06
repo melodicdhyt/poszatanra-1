@@ -7,7 +7,7 @@
     $hargajual = $_GET['hargajual'];
     
     $sql = $koneksi->query("delete from penjualan where id='$id'");
-    $sql2 = $koneksi->query("update barang set stok = (stok+$jumlah) where kodebarcode='$kodebarcode'");
+   ///$sql2 = $koneksi->query("update barang set stok = (stok+$jumlah) where kodebarcode='$kodebarcode'");///
    
 
     if ($sql  || $sql2) {

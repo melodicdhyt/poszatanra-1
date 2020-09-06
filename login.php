@@ -2,7 +2,7 @@
 error_reporting(error_reporting() & ~E_NOTICE);
 session_start();
    
-    $koneksi = new mysqli("localhost","root","","zatanra");
+    $koneksi = new mysqli("localhost","root","root","zatanra");
 
     if($_SESSION['admin'] || $_SESSION['kasir']){
         header("location:index.php");
