@@ -7,7 +7,7 @@ $kodez = $_GET['kodez'];
 if ($sql){
    ?>
      <script type="text/javascript">
-     alert("User Berhasil Dihapus");
+     alert("Data Penjualan Berhasil Dihapus");
      window.location.href="?page=datapenjualan";
      </script>
      <?php

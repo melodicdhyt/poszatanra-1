@@ -216,6 +216,16 @@ if (isset($_POST['simpan'])) {
                             </td>
                         </tr>
                         <tr>
+                            <th colspan="6" style="text-align: right;">Diskon</th>
+                            <td>
+                            <div class="form-group">
+                                <div class="form-line">
+                                <input type="number" name="diskon" id="diskon" onkeyup="hitung();" class="form-control">
+                                </div>
+                            </div>
+                            </td>
+                        </tr>
+                        <tr>
                             <th colspan="6" style="text-align: right;">Ongkir</th>
                             <td>
                             <div class="form-group">
@@ -251,9 +261,10 @@ if (isset($_POST['simpan_pj'])) {
     $subtotal = $_POST['subtotal'];
     $ongkir = $_POST['ongkir'];
     $total = $_POST['total'];
+    $diskon = $_POST['diskon'];
 
-    $simpanpenjualan=$koneksi->query("insert into d_penjualan (kodepenjualan,subtotal,ongkir,total) 
-                                        values('$kode','$subtotal','$ongkir','$total')");
+    $simpanpenjualan=$koneksi->query("insert into d_penjualan (kodepenjualan,subtotal,diskon,ongkir,total) 
+                                        values('$kode','$subtotal','$diskon','$ongkir','$total')");
                                         if ($simpanpenjualan) {
                                             ?>
                                                 <script type="text/javascript">
@@ -270,7 +281,8 @@ if (isset($_POST['simpan_pj'])) {
     function hitung() {
         var subtotal = document.getElementById('subtotal').value;
         var ongkir = document.getElementById('ongkir').value;
-        var total = parseInt(subtotal) + parseInt(ongkir);
+        var diskon = document.getElementById('diskon').value;
+        var total = parseInt(subtotal) - parseInt(diskon) + parseInt(ongkir);
         if (!isNaN(total)) {
             document.getElementById('total').value = total;
         }
