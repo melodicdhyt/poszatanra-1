@@ -34,7 +34,7 @@ $kode = $_GET['kodez'];
                                         include "koneksi.php";
                                         $cekbarang = mysqli_query($koneksi, "SELECT * FROM barang");
                                         while ($row = mysqli_fetch_array($cekbarang)) {
-                                            echo "<option value='$row[kodebarcode]'>$row[namabarang] / Size : $row[ukuran] / Stok :  $row[stok] </option>";
+                                            echo "<option value='$row[kodebarcode]'>$row[kodebarcode]-$row[namabarang] /Size : $row[ukuran] / Stok :  $row[stok] </option>";
                                         }
                                         ?>
                                     </select>
